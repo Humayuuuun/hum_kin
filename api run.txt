@@ -1,6 +1,0 @@
-set DB_HOST=10.21.3.13
-set DB_USER=postgres
-set DB_PASSWORD=Kinshuk2214
-set DB_NAME=goalpara
-set DB_PORT=5432
-python api_hum.py
