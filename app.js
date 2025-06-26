@@ -6,6 +6,7 @@ const regionDataRouter = require('./routes/regionData');
 const reliabilityIndicesRouter = require('./routes/reliabilityIndices');
 const meterDataRouter = require('./routes/metersData');
 const loadingDataRouter = require('./routes/loadingData')
+const meterInfoRoutes = require('./routes/meterInfoRoutes');
 const app = express();
 
 app.use(cors());
@@ -16,4 +17,5 @@ app.use('/api/region-data', regionDataRouter);
 app.use('/api/reliability-indices',reliabilityIndicesRouter);
 app.use('/api/meter-data', meterDataRouter);
 app.use('/api',loadingDataRouter)
+app.use('/api', meterInfoRoutes);
 module.exports = app;
