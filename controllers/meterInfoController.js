@@ -1,37 +1,33 @@
-const meterInfoPool = require('../config/meterInfoDb'); // a different DB connection config
+const meterInfoPool = require('../config/meterInfoDb');
 
 exports.getMeterInfo = async (req, res) => {
-  const { meter_id, time, single_phasing } = req.query;
+  const { meter_id, date, block } = req.query;
 
-  if (!meter_id) {
-    return res.status(400).json({ error: 'meter_id is required to determine the table' });
+  if (!meter_id || !date || !block) {
+    return res.status(400).json({ error: 'meter_id, date, and block are required' });
   }
 
-  const tableName = `meter_${meter_id.toLowerCase()}`;
+  const meterIds = meter_id.split(',').map(id => id.trim().toLowerCase());
 
-  const whereClauses = [];
-  const values = [];
-  let paramIndex = 1;
+  const results = [];
 
-  if (time) {
-    whereClauses.push(`time = $${paramIndex++}`);
-    values.push(time);
+  for (const id of meterIds) {
+    const tableName = `meter_${id}`;
+
+    const query = `
+      SELECT *, '${id}' as source_meter_id
+      FROM ${tableName}
+      WHERE date = $1 AND block = $2
+    `;
+
+    try {
+      const { rows } = await meterInfoPool.query(query, [date, parseInt(block)]);
+      results.push(...rows);
+    } catch (err) {
+      console.error(`Error querying table ${tableName}:`, err.message);
+      // Optional: continue even if one meter fails
+    }
   }
 
-  if (single_phasing) {
-    whereClauses.push(`single_phasing = $${paramIndex++}`);
-    values.push(parseInt(single_phasing));
-  }
-
-  const whereClause = whereClauses.length ? 'WHERE ' + whereClauses.join(' AND ') : '';
-
-  const query = `SELECT * FROM ${tableName} ${whereClause}`;
-
-  try {
-    const result = await meterInfoPool.query(query, values);
-    res.json(result.rows);
-  } catch (err) {
-    console.error(`Error querying ${tableName}:`, err);
-    res.status(500).json({ error: 'Internal server error or invalid meter_id table' });
-  }
+  res.json(results);
 };
