@@ -21,10 +21,6 @@ exports.getLoadingData = async (req, res) => {
   }
 
   // Filter: block
-  if (block) {
-    whereClauses.push(`block = $${paramIndex++}`);
-    values.push(parseInt(block));
-  }
 
   // Filter: flag
   if (flag) {
