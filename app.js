@@ -10,6 +10,8 @@ const meterInfoRoutes = require('./routes/meterInfoRoutes');
 const AreaData = require('./routes/AreaRoute');
 const meterMappingRoutes = require('./routes/meterMappingRoutes');
 const app = express();
+const meterMappingCrudRoutes = require('./routes/meterMappingCrudRoutes');
+
 
 app.use(cors());
 app.use(express.json());
@@ -22,4 +24,5 @@ app.use('/api',loadingDataRouter)
 app.use('/api', meterInfoRoutes);
 app.use('/api/meter-data', AreaData);
 app.use('/api', meterMappingRoutes);
+app.use('/api/meter-mapping-crud', meterMappingCrudRoutes);
 module.exports = app;

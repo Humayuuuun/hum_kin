@@ -3,8 +3,8 @@ const { Pool } = require('pg');
 const meterInfoPool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'meter_info',
-  password: 'Kinshuk2214',
+  database: 'ct_ls',
+  password: 'ItsMe@03',
   port: 5432,
 });
 
